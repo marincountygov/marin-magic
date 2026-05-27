@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;800&family=Carter+One&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body { margin: 0; background: #fff; color: #111827; font-family: 'Public Sans', Arial, sans-serif; }
@@ -15,7 +14,12 @@
     h1 { margin: 0 0 28px; display: flex; align-items: center; gap: 10px; color: #000; font-size: 2.6rem; line-height: 1; }
     .title-text { font-family: 'Carter One', cursive; }
     .icon-inline { display: inline-flex; align-items: center; justify-content: center; }
-    .icon-inline i { font-size: 2rem; color: #000; line-height: 1; }
+    .icon-inline { color: #000; line-height: 1; }
+    .icon-svg { width: 1em; height: 1em; display: inline-block; fill: currentColor; flex: 0 0 auto; }
+    .icon-title { width: 2rem; height: 2rem; }
+    .icon-tab { width: 1rem; height: 1rem; margin-right: 6px; vertical-align: -0.125em; }
+    .icon-copy { width: 1.05rem; height: 1.05rem; }
+    .icon-feedback { width: 1rem; height: 1rem; }
     .card { background: #fff; border: 1px solid #dbe4dd; border-radius: 16px; padding: 20px; margin-bottom: 20px; }
     label, strong { font-weight: 800; }
     select, input { width: 100%; min-height: 48px; padding: 12px; margin: 8px 0 12px; border: 1px solid #94a3b8; border-radius: 10px; box-sizing: border-box; font: inherit; background: #fff; color: #111827; }
@@ -58,12 +62,12 @@
 </head>
 <body>
   <div class="container">
-    <h1><span class="icon-inline"><i class="fa-solid fa-wand-magic-sparkles"></i></span><span class="title-text">MarinMagic</span></h1>
+    <h1><span class="icon-inline"><svg class="icon-svg icon-title" viewBox="0 0 576 512" aria-hidden="true"><path d="M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0L46.1 395.4zM484.6 82.6l-105 105-23.3-23.3 105-105 23.3 23.3zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z"/></svg></span><span class="title-text">MarinMagic</span></h1>
 
     <div class="main-tabs" role="tablist" aria-label="Main sections">
-      <button id="homeTabBtn" class="main-tab-button active" type="button" role="tab" aria-selected="true" aria-controls="homePane"><i class="fa-solid fa-house"></i> Home</button>
-      <button id="helpTabBtn" class="main-tab-button" type="button" role="tab" aria-selected="false" aria-controls="helpPane"><i class="fa-solid fa-circle-question"></i> Help</button>
-      <button id="updatesTabBtn" class="main-tab-button" type="button" role="tab" aria-selected="false" aria-controls="updatesPane"><i class="fa-solid fa-code-commit"></i> Updates</button>
+      <button id="homeTabBtn" class="main-tab-button active" type="button" role="tab" aria-selected="true" aria-controls="homePane"><svg class="icon-svg icon-tab" viewBox="0 0 576 512" aria-hidden="true"><path d="M575.8 255.5c0 18-15 32.1-32 32.1l-32 0 .7 160.2c0 2.7-.2 5.4-.5 8.1l0 16.2c0 22.1-17.9 40-40 40l-16 0c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1L416 512l-24 0c-22.1 0-40-17.9-40-40l0-24 0-64c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32 14.3-32 32l0 64 0 24c0 22.1-17.9 40-40 40l-24 0-31.9 0c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2l-16 0c-22.1 0-40-17.9-40-40l0-112c0-.9 0-1.9 .1-2.8l0-69.7-32 0c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg> Home</button>
+      <button id="helpTabBtn" class="main-tab-button" type="button" role="tab" aria-selected="false" aria-controls="helpPane"><svg class="icon-svg icon-tab" viewBox="0 0 512 512" aria-hidden="true"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3l58.3 0c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24l0-13.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1l-58.3 0c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg> Help</button>
+      <button id="updatesTabBtn" class="main-tab-button" type="button" role="tab" aria-selected="false" aria-controls="updatesPane"><svg class="icon-svg icon-tab" viewBox="0 0 640 512" aria-hidden="true"><path d="M320 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160zm156.8-48C462 361 397.4 416 320 416s-142-55-156.8-128L32 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l131.2 0C178 151 242.6 96 320 96s142 55 156.8 128L608 224c17.7 0 32 14.3 32 32s-14.3 32-32 32l-131.2 0z"/></svg> Updates</button>
     </div>
 
     <section id="homePane" role="tabpanel" aria-labelledby="homeTabBtn">
@@ -109,14 +113,14 @@
 
         <div id="textPane" class="preview-pane" role="tabpanel" aria-labelledby="viewTextBtn">
           <div class="pane-toolbar">
-            <button id="copyPreviewBtn" class="icon-copy-btn" type="button" aria-label="Copy rich text" title="Copy rich text"><i class="fa-regular fa-copy"></i></button>
+            <button id="copyPreviewBtn" class="icon-copy-btn" type="button" aria-label="Copy rich text" title="Copy rich text"><svg class="icon-svg icon-copy" viewBox="0 0 448 512" aria-hidden="true"><path d="M384 336l-192 0c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l140.1 0L400 115.9 400 320c0 8.8-7.2 16-16 16zM192 384l192 0c35.3 0 64-28.7 64-64l0-204.1c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1L192 0c-35.3 0-64 28.7-64 64l0 256c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-32-48 0 0 32c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l32 0 0-48-32 0z"/></svg></button>
           </div>
           <div id="preview"></div>
         </div>
 
         <div id="htmlPane" class="preview-pane" role="tabpanel" aria-labelledby="viewHtmlBtn" style="display:none;">
           <div class="pane-toolbar">
-            <button id="copyHtmlBtn" class="icon-copy-btn" type="button" aria-label="Copy HTML source" title="Copy HTML source"><i class="fa-regular fa-copy"></i></button>
+            <button id="copyHtmlBtn" class="icon-copy-btn" type="button" aria-label="Copy HTML source" title="Copy HTML source"><svg class="icon-svg icon-copy" viewBox="0 0 448 512" aria-hidden="true"><path d="M384 336l-192 0c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l140.1 0L400 115.9 400 320c0 8.8-7.2 16-16 16zM192 384l192 0c35.3 0 64-28.7 64-64l0-204.1c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1L192 0c-35.3 0-64 28.7-64 64l0 256c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-32-48 0 0 32c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l32 0 0-48-32 0z"/></svg></button>
           </div>
           <pre id="htmlPreview"></pre>
         </div>
@@ -180,7 +184,7 @@
     <div class="drop-overlay-inner">Drop CSV, XLSX, or JSON file to upload</div>
   </div>
 
-  <a class="feedback-button" href="https://form.asana.com/?k=qVUT83d5DBmlDiIyi-WAyQ&d=23133298259496" target="_blank" rel="noreferrer"><i class="fa-solid fa-circle-plus"></i> Feedback</a>
+  <a class="feedback-button" href="https://form.asana.com/?k=qVUT83d5DBmlDiIyi-WAyQ&d=23133298259496" target="_blank" rel="noreferrer"><svg class="icon-svg icon-feedback" viewBox="0 0 512 512" aria-hidden="true"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg> Feedback</a>
 
   <script>
     const fileInput = document.getElementById('fileInput');
