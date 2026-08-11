@@ -78,6 +78,8 @@ Includes:
 * keyboard focus styles
 * ARIA tab semantics
 * reduced motion support
+* operating-system light/dark preference without a manual toggle
+* a text-only Feedback control
 
 ---
 
@@ -185,21 +187,16 @@ Loads latest GitHub commits via GitHub API.
 ## Frontend stack
 
 * HTML
-* CSS
+* Pico.css and the vendored MarinOS brand bundle
 * Vanilla JavaScript
-* SheetJS (`xlsx`)
-* Font Awesome
-* Google Fonts
+* locally vendored SheetJS (`xlsx`)
+* locally vendored Jost font with system fallbacks
 
-## External libraries
+## Local libraries
 
-### SheetJS
+SheetJS, Pico.css, and Jost are stored under `vendor/`; the app does not require a runtime font, icon, CSS, or spreadsheet-library CDN.
 
-[https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js](https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js)
-
-### Font Awesome
-
-[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css)
+The installed shared UI version is recorded in `BRAND_VERSION`. Update `shared/`, required `vendor/` files, and the version marker together from one `marinappsbrand` release.
 
 ---
 
@@ -242,6 +239,12 @@ MarinMagic includes:
 * large touch targets
 * semantic tab roles
 * reduced motion support
+
+---
+
+# Testing with WAVE
+
+Prefer testing a locally served HTTP URL such as `http://localhost:8000/` (`python3 -m http.server 8000`) instead of opening the page with `file://`. Firefox extensions, including WAVE, generally cannot evaluate `file://` pages unless "Allow access to file URLs" is enabled for the extension in `about:addons`. A page that stays gray after WAVE is selected usually means the extension could not evaluate the local page, not that the site added an overlay.
 
 ---
 
