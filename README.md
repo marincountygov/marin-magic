@@ -196,7 +196,7 @@ Loads latest GitHub commits via GitHub API.
 
 SheetJS, Pico.css, and Jost are stored under `vendor/`; the app does not require a runtime font, icon, CSS, or spreadsheet-library CDN.
 
-The installed shared UI version is recorded in `BRAND_VERSION`. Update `shared/`, required `vendor/` files, and the version marker together from one `marinappsbrand` release.
+The installed shared UI version is recorded in `BRAND_VERSION`. Update `shared/`, required `vendor/` files, and the version marker together from one `marin-ui` release.
 
 ---
 
