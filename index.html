@@ -193,6 +193,7 @@
           <nav class="app-nav" id="app-nav" aria-label="Application navigation">
             <a href="#about">About</a>
             <a href="#updates">Updates</a>
+            <a href="#security">Security</a>
           </nav>
         </div>
       </div>
@@ -308,12 +309,31 @@
           <li>Use Copy HTML source for source or code editors.</li>
           <li>Preview your CMS page before publishing.</li>
         </ul>
+        <h3>Related information</h3>
+        <ul>
+          <li><a href="#security">Security</a></li>
+        </ul>
       </section>
 
       <section id="updates" class="app-card" hidden data-updates-repo="marin-magic" data-app-name="MarinMagic">
         <h2>Updates</h2>
         <p data-updates-status class="app-help-text" role="status" aria-live="polite" aria-atomic="true">Select the Updates tab to load recent commits.</p>
         <div data-updates-list></div>
+      </section>
+
+      <section id="security" class="app-card" hidden data-security-json="security.json">
+        <h2>Security</h2>
+        <p>MarinMagic follows the <a href="https://github.com/marincountygov/marin-digital-standards/blob/main/security/standard.md">MarinOS security standard</a>.</p>
+        <h3>Report an issue</h3>
+        <p>See <a href="/.well-known/security.txt">security.txt</a> for contact details.</p>
+        <h3>Application security</h3>
+        <p data-security-status class="app-help-text" role="status" aria-live="polite" aria-atomic="true">Select the Security tab to load security information.</p>
+        <div data-security-content></div>
+        <h3>Technical information</h3>
+        <ul>
+          <li><a href="security.json">security.json</a></li>
+          <li><a href="/.well-known/security.txt">security.txt</a></li>
+        </ul>
       </section>
     </main>
 
@@ -351,6 +371,7 @@
       const homePanel = document.querySelector("#home-panel");
       const aboutSection = document.querySelector("#about");
       const updatesSection = document.querySelector("#updates");
+      const securitySection = document.querySelector("#security");
 
       let headers = [];
       let rows = [];
@@ -388,10 +409,12 @@
         const hash = window.location.hash || "#home";
         const showAbout = hash === "#about";
         const showUpdates = hash === "#updates";
-        homeHero.hidden = showAbout || showUpdates;
-        homePanel.hidden = showAbout || showUpdates;
+        const showSecurity = hash === "#security";
+        homeHero.hidden = showAbout || showUpdates || showSecurity;
+        homePanel.hidden = showAbout || showUpdates || showSecurity;
         aboutSection.hidden = !showAbout;
         updatesSection.hidden = !showUpdates;
+        securitySection.hidden = !showSecurity;
       }
 
       function activateTabs(tabs, activeTab) {
