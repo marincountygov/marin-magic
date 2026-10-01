@@ -60,7 +60,7 @@ Copies exact HTML markup.
 
 Displays latest commits from:
 
-[https://github.com/marincountygov/marinmagic](https://github.com/marincountygov/marinmagic)
+[https://github.com/marincountygov/marin-magic](https://github.com/marincountygov/marin-magic)
 
 Includes:
 
@@ -187,16 +187,18 @@ Loads latest GitHub commits via GitHub API.
 ## Frontend stack
 
 * HTML
-* Pico.css and the vendored MarinOS brand bundle
+* Marin App Shell (`vendor/marinos/`)
 * Vanilla JavaScript
 * locally vendored SheetJS (`xlsx`)
 * locally vendored Jost font with system fallbacks
 
-## Local libraries
+## MarinOS integration
 
-SheetJS, Pico.css, and Jost are stored under `vendor/`; the app does not require a runtime font, icon, CSS, or spreadsheet-library CDN.
+MarinMagic vendors Marin App Shell under `vendor/marinos/`, with the pinned shell version recorded in `marin.yml`.
 
-The installed shared UI version is recorded in `BRAND_VERSION`. Update `shared/`, required `vendor/` files, and the version marker together from one `marin-ui` release.
+The shell owns common MarinOS application chrome (banner, header, info sections, footer, feedback), while application-specific logic remains in the app's own files.
+
+**Do not edit vendored shell files under `vendor/marinos/` directly.**
 
 ---
 
@@ -205,7 +207,7 @@ The installed shared UI version is recorded in `BRAND_VERSION`. Update `shared/`
 Updates tab uses:
 
 ```text
-https://api.github.com/repos/marincountygov/marinmagic/commits?per_page=10
+https://api.github.com/repos/marincountygov/marin-magic/commits?per_page=10
 ```
 
 ---

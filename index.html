@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MarinMagic | County of Marin</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23000'/%3E%3Cg fill='none' stroke='%23e5b53b' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round' transform='translate(9,9) scale(1.25)'%3E%3Cpath d='M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z'/%3E%3Cpath d='M20 2v4'/%3E%3Cpath d='M22 4h-4'/%3E%3Ccircle cx='4' cy='20' r='2'/%3E%3C/g%3E%3C/svg%3E">
     <meta name="description" content="Convert spreadsheet data into CMS-ready structured rich text.">
-    <link rel="stylesheet" href="./vendor/pico.min.css">
-    <link rel="stylesheet" href="./shared/app-brand.css">
+    <link rel="stylesheet" href="vendor/marinos/marinos.css">
     <style>
       .magic-hero {
         display: grid;
@@ -170,186 +169,152 @@
     </style>
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to main content</a>
+    <noscript>
+      <div class="container app-alert app-alert--danger" role="alert">JavaScript is required to convert spreadsheet data in the browser.</div>
+    </noscript>
 
-    <div class="marinos-banner">
-      <div class="marinos-banner__inner"><div class="menu marinos-menu"><button type="button" class="menu-toggle marinos-menu__toggle" aria-expanded="false" aria-controls="marinos-menu-panel"><span class="marinos-banner__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></span>MarinOS<sup>ALPHA</sup><svg class="menu-toggle__caret" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div id="marinos-menu-panel" class="menu-panel marinos-menu__panel" hidden><a href="https://marincountygov.github.io/marin-magic/"><span class="marinos-menu__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span>MarinMagic</a><a href="https://marincountygov.github.io/marin-decision-maker/"><span class="marinos-menu__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg></span>Marin Decision Maker</a><a href="https://marincountygov.github.io/marin-docs/"><span class="marinos-menu__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span>MarinDocs</a><a class="marinos-menu__all" href="https://marincountygov.github.io/marin-os/">Browse all in MarinOS</a></div></div></div>
-    </div>
+    <marin-os-banner></marin-os-banner>
 
-    <header class="app-header" role="banner">
-      <div class="app-header__inner">
-        <div class="app-identity">
-          <a href="./" class="app-title-row">
-            <span class="app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span>
-            <div class="app-title-copy">
-              <h1 class="app-title">MarinMagic</h1>
-              <p class="app-subtitle">Convert spreadsheet data into CMS-ready structured rich text.</p>
-            </div>
-          </a>
-        </div>
+    <marin-app-header
+      app-name="MarinMagic"
+      app-description="Convert spreadsheet data into CMS-ready structured rich text."
+    >
+      <template data-icon>
+        <svg viewBox="0 0 24 24"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg>
+      </template>
+    </marin-app-header>
 
-        <div class="app-header__actions">
-          <button type="button" class="app-menu-toggle secondary" id="menu-toggle" aria-expanded="false" aria-controls="app-nav">Menu</button>
-          <nav class="app-nav" id="app-nav" aria-label="Application navigation">
-            <a href="#about">About</a>
-            <a href="#updates">Updates</a>
-            <a href="#security">Security</a>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <main id="main" class="container app-main">
+      <section id="start" data-tab-section="start" aria-labelledby="home-heading">
+        <div id="app-status-message" role="status" aria-live="polite"></div>
 
-    <main id="main" class="container app-main" tabindex="-1">
-      <div id="app-status-message" role="status" aria-live="polite"></div>
-
-      <section id="home" class="magic-hero" aria-labelledby="home-heading">
-        <article class="app-card magic-upload">
-          <h2 id="home-heading">Upload a spreadsheet or data file</h2>
-          <p id="upload-help" class="app-help-text">Drag and drop a file anywhere on this page, or use the browse button. Supported file types: <code>.csv</code>, <code>.xlsx</code>, <code>.xls</code>, <code>.json</code>.</p>
-          <div class="app-actions">
-            <button id="browse-files" type="button">Browse files</button>
-          </div>
-          <input id="file-input" class="visually-hidden" type="file" aria-labelledby="home-heading" aria-describedby="upload-help" accept=".csv,.xlsx,.xls,.json,application/json,text/csv">
-          <p id="file-status" class="app-help-text" role="status" aria-live="polite" aria-atomic="true">Select a file to begin.</p>
-        </article>
-      </section>
-
-      <section id="home-panel" aria-label="MarinMagic conversion workflow">
-        <article id="mapping-panel" class="app-card" hidden>
-          <div class="app-toolbar">
-            <div>
-              <h2>Choose output fields</h2>
-            </div>
-          </div>
-          <div class="app-form-grid">
-            <div class="app-field">
-              <label for="heading-column">Select heading column</label>
-              <select id="heading-column"></select>
-            </div>
-            <div class="app-field">
-              <label for="heading-level">Heading level</label>
-              <select id="heading-level">
-                <option value="h2" selected>h2</option>
-                <option value="h3">h3</option>
-                <option value="h4">h4</option>
-                <option value="h5">h5</option>
-                <option value="h6">h6</option>
-              </select>
-            </div>
-          </div>
-          <fieldset aria-describedby="field-list-help">
-            <legend>Select columns for list items</legend>
-            <p id="field-list-help" class="app-help-text">Drag fields to reorder them, or use Move up and Move down buttons as a keyboard-accessible alternative.</p>
-            <div id="field-list" class="magic-field-list"></div>
-          </fieldset>
-        </article>
-
-        <div class="app-toolbar">
-          <div class="app-actions">
-            <button id="generate-preview" type="button">Generate preview</button>
-            <button id="download-html" class="secondary" type="button">Download HTML</button>
-            <button id="reset-tool" class="secondary" type="button">Reset</button>
-          </div>
-        </div>
-
-        <article class="app-card">
-          <div class="app-toolbar">
-            <div>
-              <h2>Generated content</h2>
-            </div>
+        <div class="magic-hero">
+          <article class="app-card magic-upload">
+            <h2 id="home-heading">Upload a spreadsheet or data file</h2>
+            <p id="upload-help" class="app-help-text">Drag and drop a file anywhere on this page, or use the browse button. Supported file types: <code>.csv</code>, <code>.xlsx</code>, <code>.xls</code>, <code>.json</code>.</p>
             <div class="app-actions">
-              <button id="copy-rich-text" class="secondary magic-icon-button" type="button" aria-label="Copy rich text" title="Copy rich text">
-                <svg class="magic-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 18H8V7h11v16Z"/></svg>
-              </button>
-              <button id="copy-html" class="secondary magic-icon-button" type="button" aria-label="Copy HTML source" title="Copy HTML source">
-                <svg class="magic-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8.7 16.3-1.4 1.4L1.6 12l5.7-5.7 1.4 1.4L4.1 12l4.6 4.3Zm6.6 0 4.6-4.3-4.6-4.3 1.4-1.4 5.7 5.7-5.7 5.7-1.4-1.4ZM13.9 4 10 20h-2l3.9-16h2Z"/></svg>
-              </button>
+              <button id="browse-files" type="button">Browse files</button>
+            </div>
+            <input id="file-input" class="visually-hidden" type="file" aria-labelledby="home-heading" aria-describedby="upload-help" accept=".csv,.xlsx,.xls,.json,application/json,text/csv">
+            <p id="file-status" class="app-help-text" role="status" aria-live="polite" aria-atomic="true">Select a file to begin.</p>
+          </article>
+        </div>
+
+        <div id="home-panel" aria-label="MarinMagic conversion workflow">
+          <article id="mapping-panel" class="app-card" hidden>
+            <div class="app-toolbar">
+              <div>
+                <h2>Choose output fields</h2>
+              </div>
+            </div>
+            <div class="app-form-grid">
+              <div class="app-field">
+                <label for="heading-column">Select heading column</label>
+                <select id="heading-column"></select>
+              </div>
+              <div class="app-field">
+                <label for="heading-level">Heading level</label>
+                <select id="heading-level">
+                  <option value="h2" selected>h2</option>
+                  <option value="h3">h3</option>
+                  <option value="h4">h4</option>
+                  <option value="h5">h5</option>
+                  <option value="h6">h6</option>
+                </select>
+              </div>
+            </div>
+            <fieldset aria-describedby="field-list-help">
+              <legend>Select columns for list items</legend>
+              <p id="field-list-help" class="app-help-text">Drag fields to reorder them, or use Move up and Move down buttons as a keyboard-accessible alternative.</p>
+              <div id="field-list" class="magic-field-list"></div>
+            </fieldset>
+          </article>
+
+          <div class="app-toolbar">
+            <div class="app-actions">
+              <button id="generate-preview" type="button">Generate preview</button>
+              <button id="download-html" class="secondary" type="button">Download HTML</button>
+              <button id="reset-tool" class="secondary" type="button">Reset</button>
             </div>
           </div>
 
-          <div class="magic-tabs" role="tablist" aria-label="Preview modes">
-            <button id="text-tab" class="magic-tab" type="button" role="tab" aria-selected="true" aria-controls="text-panel">Text</button>
-            <button id="html-tab" class="magic-tab" type="button" role="tab" aria-selected="false" aria-controls="html-panel" tabindex="-1">HTML</button>
-          </div>
+          <article class="app-card">
+            <div class="app-toolbar">
+              <div>
+                <h2>Generated content</h2>
+              </div>
+              <div class="app-actions">
+                <button id="copy-rich-text" class="secondary magic-icon-button" type="button" aria-label="Copy rich text" title="Copy rich text">
+                  <svg class="magic-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 18H8V7h11v16Z"/></svg>
+                </button>
+                <button id="copy-html" class="secondary magic-icon-button" type="button" aria-label="Copy HTML source" title="Copy HTML source">
+                  <svg class="magic-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8.7 16.3-1.4 1.4L1.6 12l5.7-5.7 1.4 1.4L4.1 12l4.6 4.3Zm6.6 0 4.6-4.3-4.6-4.3 1.4-1.4 5.7 5.7-5.7 5.7-1.4-1.4ZM13.9 4 10 20h-2l3.9-16h2Z"/></svg>
+                </button>
+              </div>
+            </div>
 
-          <div id="text-panel" class="magic-preview magic-output" role="tabpanel" aria-labelledby="text-tab">
-            <p class="app-help-text">Preview will appear after a file is loaded.</p>
-          </div>
-          <pre id="html-panel" class="magic-preview magic-preview--html" role="tabpanel" aria-labelledby="html-tab" hidden></pre>
-        </article>
+            <div class="magic-tabs" role="tablist" aria-label="Preview modes">
+              <button id="text-tab" class="magic-tab" type="button" role="tab" aria-selected="true" aria-controls="text-panel">Text</button>
+              <button id="html-tab" class="magic-tab" type="button" role="tab" aria-selected="false" aria-controls="html-panel" tabindex="-1">HTML</button>
+            </div>
+
+            <div id="text-panel" class="magic-preview magic-output" role="tabpanel" aria-labelledby="text-tab">
+              <p class="app-help-text">Preview will appear after a file is loaded.</p>
+            </div>
+            <pre id="html-panel" class="magic-preview magic-preview--html" role="tabpanel" aria-labelledby="html-tab" hidden></pre>
+          </article>
+        </div>
       </section>
 
-      <section id="about" class="app-card" hidden>
-        <h2>About MarinMagic</h2>
-        <p>Upload CSV, XLSX, XLS, or JSON data, choose the heading and list fields, preview the output, then copy rich text or HTML source into your CMS.</p>
-        <h3>Supported output</h3>
-        <p><span class="app-status" data-status="success">CMS-ready HTML</span></p>
-        <ul>
-          <li>Heading levels h2 through h6</li>
-          <li>Unordered lists from selected fields</li>
-          <li>Rich text and source copy tools</li>
-        </ul>
-        <h3>Prepare your file</h3>
-        <ul>
-          <li>Keep only the data you need.</li>
-          <li>Remove formulas and use plain text values.</li>
-          <li>Make sure column headers are clearly labeled.</li>
-          <li>Export as CSV when possible, or upload XLSX, XLS, or JSON.</li>
-        </ul>
-        <h3>Configure field mapping</h3>
-        <ol>
-          <li>Choose the column that should become each section heading.</li>
-          <li>Select the heading level to generate.</li>
-          <li>Choose which columns should appear as list items.</li>
-          <li>Drag fields or use Move up and Move down to order list items.</li>
-        </ol>
-        <h3>Copy into the CMS</h3>
-        <ul>
-          <li>Use Copy rich text for visual editors.</li>
-          <li>Use Copy HTML source for source or code editors.</li>
-          <li>Preview your CMS page before publishing.</li>
-        </ul>
-        <h3>Related information</h3>
-        <ul>
-          <li><a href="#security">Security</a></li>
-        </ul>
-      </section>
-
-      <section id="updates" class="app-card" hidden data-updates-repo="marin-magic" data-app-name="MarinMagic">
-        <h2>Updates</h2>
-        <p data-updates-status class="app-help-text" role="status" aria-live="polite" aria-atomic="true">Select the Updates tab to load recent commits.</p>
-        <div data-updates-list></div>
-      </section>
-
-      <section id="security" class="app-card" hidden data-security-json="security.json">
-        <h2>Security</h2>
-        <p>MarinMagic follows the <a href="https://github.com/marincountygov/marin-digital-standards/blob/main/security/standard.md">MarinOS security standard</a>.</p>
-        <h3>Report an issue</h3>
-        <p>See <a href=".well-known/security.txt">security.txt</a> for contact details.</p>
-        <h3>Application security</h3>
-        <p data-security-status class="app-help-text" role="status" aria-live="polite" aria-atomic="true">Select the Security tab to load security information.</p>
-        <div data-security-content></div>
-        <h3>Technical information</h3>
-        <ul>
-          <li><a href="security.json">security.json</a></li>
-          <li><a href=".well-known/security.txt">security.txt</a></li>
-        </ul>
-      </section>
+      <marin-app-info
+        app-name="MarinMagic"
+        repo="marin-magic"
+        security-src="security.json"
+      >
+        <template data-about>
+          <p>Upload CSV, XLSX, XLS, or JSON data, choose the heading and list fields, preview the output, then copy rich text or HTML source into your CMS.</p>
+          <h3>Supported output</h3>
+          <p><span class="app-status" data-status="success">CMS-ready HTML</span></p>
+          <ul>
+            <li>Heading levels h2 through h6</li>
+            <li>Unordered lists from selected fields</li>
+            <li>Rich text and source copy tools</li>
+          </ul>
+          <h3>Prepare your file</h3>
+          <ul>
+            <li>Keep only the data you need.</li>
+            <li>Remove formulas and use plain text values.</li>
+            <li>Make sure column headers are clearly labeled.</li>
+            <li>Export as CSV when possible, or upload XLSX, XLS, or JSON.</li>
+          </ul>
+          <h3>Configure field mapping</h3>
+          <ol>
+            <li>Choose the column that should become each section heading.</li>
+            <li>Select the heading level to generate.</li>
+            <li>Choose which columns should appear as list items.</li>
+            <li>Drag fields or use Move up and Move down to order list items.</li>
+          </ol>
+          <h3>Copy into the CMS</h3>
+          <ul>
+            <li>Use Copy rich text for visual editors.</li>
+            <li>Use Copy HTML source for source or code editors.</li>
+            <li>Preview your CMS page before publishing.</li>
+          </ul>
+        </template>
+      </marin-app-info>
     </main>
 
-    <footer class="app-footer" role="contentinfo"><div class="app-footer__inner"><a href="https://marincountygov.github.io/marin-os/">MarinOS</a></div></footer>
+    <marin-app-footer app-name="MarinMagic"></marin-app-footer>
+    <marin-app-feedback></marin-app-feedback>
 
     <div id="drop-overlay" class="magic-drop-overlay" aria-hidden="true">
       <div class="magic-drop-overlay__inner">Drop CSV, XLSX, XLS, or JSON file to upload</div>
     </div>
 
-    <a class="app-feedback" href="https://form.asana.com/?k=qVUT83d5DBmlDiIyi-WAyQ&amp;d=23133298259496" target="_blank" rel="noreferrer">Feedback</a>
-
     <script src="./vendor/xlsx.full.min.js"></script>
-    <script src="./shared/app-shell.js"></script>
+    <script src="vendor/marinos/marinos.js" defer></script>
     <script>
       const statusMessage = document.querySelector("#app-status-message");
-      const appNav = document.querySelector("#app-nav");
 
       const fileInput = document.querySelector("#file-input");
       const browseFilesButton = document.querySelector("#browse-files");
@@ -367,11 +332,6 @@
       const copyHtmlButton = document.querySelector("#copy-html");
       const dropOverlay = document.querySelector("#drop-overlay");
       const previewTabs = Array.from(document.querySelectorAll("#text-tab, #html-tab"));
-      const homeHero = document.querySelector("#home");
-      const homePanel = document.querySelector("#home-panel");
-      const aboutSection = document.querySelector("#about");
-      const updatesSection = document.querySelector("#updates");
-      const securitySection = document.querySelector("#security");
 
       let headers = [];
       let rows = [];
@@ -395,26 +355,6 @@
 
       function setFileStatus(message) {
         fileStatus.textContent = message;
-      }
-
-      function updateCurrentNavLink() {
-        const currentHash = window.location.hash || "#home";
-        Array.from(appNav.querySelectorAll("a")).forEach((link) => {
-          if (link.getAttribute("href") === currentHash) link.setAttribute("aria-current", "page");
-          else link.removeAttribute("aria-current");
-        });
-      }
-
-      function showSectionFromHash() {
-        const hash = window.location.hash || "#home";
-        const showAbout = hash === "#about";
-        const showUpdates = hash === "#updates";
-        const showSecurity = hash === "#security";
-        homeHero.hidden = showAbout || showUpdates || showSecurity;
-        homePanel.hidden = showAbout || showUpdates || showSecurity;
-        aboutSection.hidden = !showAbout;
-        updatesSection.hidden = !showUpdates;
-        securitySection.hidden = !showSecurity;
       }
 
       function activateTabs(tabs, activeTab) {
@@ -745,11 +685,7 @@
         if (files.length > 1) setFileStatus(`Multiple files detected; using first file: ${files[0].name}`);
         handleSelectedFile(files[0]);
       });
-      window.addEventListener("hashchange", updateCurrentNavLink);
-      window.addEventListener("hashchange", showSectionFromHash);
       setupTabs(previewTabs, () => undefined);
-      updateCurrentNavLink();
-      showSectionFromHash();
     </script>
   </body>
 </html>
