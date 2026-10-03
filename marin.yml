@@ -1,7 +1,7 @@
 schema: 1
 
 project:
-  name: MarinMagic
+  name: Marin Magic
   repo: marin-magic
   type: app
   owner: County of Marin
@@ -9,7 +9,7 @@ project:
   status: live
 
 platform:
-  shell: 1.1.1
+  shell: 1.1.2
 
 deployment:
   target: github-pages

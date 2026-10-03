@@ -1,4 +1,4 @@
-# Story: MarinMagic
+# Story: Marin Magic
 
 ## Overview
 
@@ -16,7 +16,7 @@ At the same time, staff faced challenges converting spreadsheet-based operationa
 
 The solution emerged from “Innovation Hour,” a weekly informal collaboration session where staff bring real operational pain points and work together to prototype solutions in real time.
 
-After identifying the spreadsheet-to-web publishing challenge, staff rapidly co-developed a lightweight tool called MarinMagic that converts spreadsheet data into Drupal-ready content.
+After identifying the spreadsheet-to-web publishing challenge, staff rapidly co-developed a lightweight tool called Marin Magic that converts spreadsheet data into Drupal-ready content.
 
 Within approximately 24 hours:
 - A working prototype was developed

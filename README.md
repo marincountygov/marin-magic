@@ -1,8 +1,8 @@
-# MarinMagic
+# Marin Magic
 
 Convert spreadsheet data into structured rich text for your content management system (CMS).
 
-MarinMagic is a browser-based utility that:
+Marin Magic is a browser-based utility that:
 
 * uploads CSV, XLSX, or JSON files
 * converts rows into structured HTML
@@ -194,7 +194,7 @@ Loads latest GitHub commits via GitHub API.
 
 ## MarinOS integration
 
-MarinMagic vendors Marin App Shell under `vendor/marinos/`, with the pinned shell version recorded in `marin.yml`.
+Marin Magic vendors Marin App Shell under `vendor/marinos/`, with the pinned shell version recorded in `marin.yml`.
 
 The shell owns common MarinOS application chrome (banner, header, info sections, footer, feedback), while application-specific logic remains in the app's own files.
 
@@ -234,7 +234,7 @@ Use:
 
 # Accessibility
 
-MarinMagic includes:
+Marin Magic includes:
 
 * WCAG-conscious contrast
 * keyboard focus indicators
@@ -246,7 +246,7 @@ MarinMagic includes:
 
 # Security
 
-MarinMagic follows the [MarinOS security standard](https://github.com/marincountygov/marin-digital-standards/blob/main/security/standard.md). See [`SECURITY.md`](SECURITY.md) to report an issue, or the app's own `#security` section for a plain-language summary.
+Marin Magic follows the [MarinOS security standard](https://github.com/marincountygov/marin-digital-standards/blob/main/security/standard.md). See [`SECURITY.md`](SECURITY.md) to report an issue, or the app's own `#security` section for a plain-language summary.
 
 ---
 
@@ -258,4 +258,4 @@ Prefer testing a locally served HTTP URL such as `http://localhost:8000/` (`pyth
 
 # License
 
-County of Marin
+MIT — see [LICENSE](LICENSE).
