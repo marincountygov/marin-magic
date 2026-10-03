@@ -1,8 +1,8 @@
-# MarinMagic SpecOps
+# Marin Magic SpecOps
 
 ## 1. Overview
 
-MarinMagic is a browser-based utility that converts structured tabular data into CMS-ready rich text and HTML. It accepts CSV, XLSX/XLS, and JSON files, lets users map fields to headings and list items, then generates sorted HTML output that can be copied as rich text, copied as source HTML, or downloaded as an HTML file.
+Marin Magic is a browser-based utility that converts structured tabular data into CMS-ready rich text and HTML. It accepts CSV, XLSX/XLS, and JSON files, lets users map fields to headings and list items, then generates sorted HTML output that can be copied as rich text, copied as source HTML, or downloaded as an HTML file.
 
 The tool is intended for County of Marin content editors who need to transform spreadsheet-style content into clean, repeatable CMS text-section content without manually formatting each item.
 
@@ -50,13 +50,13 @@ Spreadsheet files are parsed client-side using the XLSX library. The first works
 
 ### JSON
 
-JSON input must be an array of objects. MarinMagic derives the header list from all unique object keys, then converts each object into a row ordered by those keys.
+JSON input must be an array of objects. Marin Magic derives the header list from all unique object keys, then converts each object into a row ordered by those keys.
 
 Invalid JSON, or JSON that is not an array of objects, should show a readable failure status.
 
 ## 5. Data model
 
-MarinMagic uses three primary state values:
+Marin Magic uses three primary state values:
 
 * `headers`: first row of the loaded table, used as field labels
 * `rows`: all non-empty rows after the header row
@@ -144,7 +144,7 @@ When preview is generated:
 
 ## 7. Output rules
 
-For each valid row, MarinMagic generates:
+For each valid row, Marin Magic generates:
 
 ```html
 <HEADING_TAG>Heading value</HEADING_TAG><ul><li>Column label: Cell value</li></ul>
@@ -204,7 +204,7 @@ The download button:
 
 ## 10. Navigation tabs
 
-MarinMagic has three main sections:
+Marin Magic has three main sections:
 
 * Home
 * Help
@@ -226,7 +226,7 @@ Only one preview pane is visible at a time. Tab buttons update active state and 
 The Help tab provides user-facing instructions for:
 
 * Preparing CSV data
-* Uploading data into MarinMagic
+* Uploading data into Marin Magic
 * Selecting heading and list columns
 * Generating a preview
 * Copying generated rich text
@@ -235,7 +235,7 @@ The Help tab provides user-facing instructions for:
 
 ## 13. Updates panel
 
-When the Updates tab is selected for the first time, MarinMagic requests the 10 latest commits from:
+When the Updates tab is selected for the first time, Marin Magic requests the 10 latest commits from:
 
 `https://api.github.com/repos/marincountygov/marinmagic/commits?per_page=10`
 
@@ -349,4 +349,4 @@ If GitHub commit loading fails:
 
 ## 20. Release/support notes
 
-MarinMagic is a static, client-side utility. Operational support should focus on browser compatibility, CDN availability, user file quality, CMS paste behavior, and the availability of the GitHub commits endpoint used by the Updates panel.
+Marin Magic is a static, client-side utility. Operational support should focus on browser compatibility, CDN availability, user file quality, CMS paste behavior, and the availability of the GitHub commits endpoint used by the Updates panel.
