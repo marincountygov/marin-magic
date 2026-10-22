@@ -12,7 +12,7 @@ This is a static, zero-build MarinOS application. It uses the shared `marin-ui` 
 
 ## Before finishing
 
-There is no automated check command yet. Manually verify against the review checklist in `marin-skills/marin-app-builder/SKILL.md`: metadata placeholders replaced, nav includes About and Updates (plus Home if the default view has no task tab of its own), accessibility basics, no invented components.
+Run `bash scripts/check.sh` (shell integrity and the button audit, when `marin-app-shell` is next to this repo) and `bash scripts/check.sh --browser` (adds `tests/browser_magic.py`, which loads fixture files and checks the generated HTML, field order, tabs, download and reset; it needs Playwright for Python with Chromium). Then manually verify against the review checklist in `marin-skills/marin-app-builder/SKILL.md`: metadata placeholders replaced, nav includes About and Updates (plus Home if the default view has no task tab of its own), accessibility basics, no invented components.
 
 ## References
 
