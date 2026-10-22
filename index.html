@@ -15,29 +15,6 @@
         margin-bottom: 1.5rem;
       }
 
-      .magic-tabs {
-        display: inline-flex;
-        gap: 0.25rem;
-        padding: 0.25rem;
-        margin-bottom: 1rem;
-        border: 1px solid var(--app-border);
-        border-radius: 999px;
-        background: var(--app-surface);
-        flex-wrap: wrap;
-      }
-
-      .magic-tab {
-        margin: 0;
-        border-radius: 999px;
-        background: transparent;
-        color: var(--app-text);
-      }
-
-      .magic-tab[aria-selected="true"] {
-        background: var(--app-accent);
-        color: var(--app-bg);
-      }
-
       .magic-upload {
         border: 2px dashed var(--app-border);
       }
@@ -100,24 +77,6 @@
         justify-content: flex-end;
       }
 
-      .magic-move-controls button,
-      .magic-icon-button {
-        min-height: 2.5rem;
-        padding: 0.4rem 0.65rem;
-      }
-
-      .magic-icon-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .magic-icon {
-        width: 1rem;
-        height: 1rem;
-        fill: currentColor;
-      }
-
       .magic-drop-overlay {
         position: fixed;
         inset: 0;
@@ -151,8 +110,6 @@
       }
 
       @media (max-width: 720px) {
-        .magic-tabs,
-        .magic-tab,
         .magic-field-item {
           width: 100%;
         }
@@ -193,7 +150,7 @@
             <h2 id="home-heading">Upload a spreadsheet or data file</h2>
             <p id="upload-help" class="app-help-text">Drag and drop a file anywhere on this page, or use the browse button. Supported file types: <code>.csv</code>, <code>.xlsx</code>, <code>.xls</code>, <code>.json</code>.</p>
             <div class="app-actions">
-              <button id="browse-files" type="button">Browse files</button>
+              <button id="browse-files" type="button" class="action-button" data-icon="upload">Browse files</button>
             </div>
             <input id="file-input" class="visually-hidden" type="file" aria-labelledby="home-heading" aria-describedby="upload-help" accept=".csv,.xlsx,.xls,.json,application/json,text/csv">
             <p id="file-status" class="app-help-text" role="status" aria-live="polite" aria-atomic="true">Select a file to begin.</p>
@@ -232,9 +189,11 @@
 
           <div class="app-toolbar">
             <div class="app-actions">
-              <button id="generate-preview" type="button">Generate preview</button>
-              <button id="download-html" class="secondary" type="button">Download HTML</button>
-              <button id="reset-tool" class="secondary" type="button">Reset</button>
+              <button id="generate-preview" type="button" class="primary">Generate preview</button>
+              <div class="action-group" role="group" aria-label="Output actions">
+                <button id="download-html" class="action-button" type="button" data-icon="download" aria-label="Download HTML" title="Download HTML"></button>
+                <button id="reset-tool" class="action-button" type="button" data-icon="rotate-ccw" aria-label="Reset" title="Reset"></button>
+              </div>
             </div>
           </div>
 
@@ -244,18 +203,14 @@
                 <h2>Generated content</h2>
               </div>
               <div class="app-actions">
-                <button id="copy-rich-text" class="secondary magic-icon-button" type="button" aria-label="Copy rich text" title="Copy rich text">
-                  <svg class="magic-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 18H8V7h11v16Z"/></svg>
-                </button>
-                <button id="copy-html" class="secondary magic-icon-button" type="button" aria-label="Copy HTML source" title="Copy HTML source">
-                  <svg class="magic-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8.7 16.3-1.4 1.4L1.6 12l5.7-5.7 1.4 1.4L4.1 12l4.6 4.3Zm6.6 0 4.6-4.3-4.6-4.3 1.4-1.4 5.7 5.7-5.7 5.7-1.4-1.4ZM13.9 4 10 20h-2l3.9-16h2Z"/></svg>
-                </button>
+                <button id="copy-rich-text" class="action-button" type="button" data-icon="copy" aria-label="Copy rich text" title="Copy rich text">Copy text</button>
+                <button id="copy-html" class="action-button" type="button" data-icon="copy" aria-label="Copy HTML source" title="Copy HTML source">Copy HTML</button>
               </div>
             </div>
 
-            <div class="magic-tabs" role="tablist" aria-label="Preview modes">
-              <button id="text-tab" class="magic-tab" type="button" role="tab" aria-selected="true" aria-controls="text-panel">Text</button>
-              <button id="html-tab" class="magic-tab" type="button" role="tab" aria-selected="false" aria-controls="html-panel" tabindex="-1">HTML</button>
+            <div class="tab-list" role="tablist" aria-label="Preview modes">
+              <button id="text-tab" class="tab-button" type="button" role="tab" aria-selected="true" aria-controls="text-panel">Text</button>
+              <button id="html-tab" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="html-panel" tabindex="-1">HTML</button>
             </div>
 
             <div id="text-panel" class="magic-preview magic-output" role="tabpanel" aria-labelledby="text-tab">
@@ -501,17 +456,21 @@
           checkboxLabel.setAttribute("for", checkbox.id);
           checkboxLabel.textContent = label;
           const controls = document.createElement("span");
-          controls.className = "magic-move-controls";
+          controls.className = "magic-move-controls action-group action-group--spaced";
+          controls.setAttribute("role", "group");
+          controls.setAttribute("aria-label", `Move ${label}`);
           const up = document.createElement("button");
           up.type = "button";
-          up.className = "secondary";
-          up.textContent = "Move up";
+          up.className = "action-button";
+          up.dataset.icon = "arrow-up";
+          up.title = "Move up";
           up.setAttribute("aria-label", `Move ${label} up`);
           up.addEventListener("click", () => moveItem(item, -1));
           const down = document.createElement("button");
           down.type = "button";
-          down.className = "secondary";
-          down.textContent = "Move down";
+          down.className = "action-button";
+          down.dataset.icon = "arrow-down";
+          down.title = "Move down";
           down.setAttribute("aria-label", `Move ${label} down`);
           down.addEventListener("click", () => moveItem(item, 1));
           controls.append(up, down);
