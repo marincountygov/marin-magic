@@ -138,12 +138,11 @@ def run(browser, base, tmp: Path):
     require(not unnamed, f"Every button has a name: {unnamed}")
     icon_only = page.evaluate("""() => [...document.querySelectorAll('button.action-button')].filter(b => !(b.textContent || '').trim() && !b.title).map(b => b.id)""")
     require(not icon_only, f"Icon-only buttons have a tooltip: {icon_only}")
-    # Visible content stays inside the window. (The hidden file input is left out: the shell's .visually-hidden class
-    # is overridden by Pico's input width, which makes the page 33 px wider than the window. A shell fix is pending.)
-    wide = page.evaluate("""() => [...document.querySelectorAll('body *')]
-        .filter((e) => !e.closest('.visually-hidden') && !e.matches('.visually-hidden') && e.getBoundingClientRect().right > innerWidth + 1)
-        .map((e) => e.tagName + '.' + e.className)""")
-    require(not wide, f"Nothing visible runs off the right edge: {wide}")
+    # The page is never wider than the window, desktop or phone.
+    require(page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1"), "No horizontal scroll at 1100 px")
+    page.set_viewport_size({"width": 390, "height": 800})
+    page.wait_for_timeout(200)
+    require(page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1"), "No horizontal scroll at 390 px")
     require(not problems, f"Console or page errors: {problems}")
     context.close()
 
