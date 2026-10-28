@@ -45,11 +45,11 @@ Raw HTML output for source/code editing.
 
 ## Copy and download
 
-Copy and Download are each one button with a menu of formats, in the same order: HTML, Text, Markdown. Copy Text copies rich text for pasting into a visual editor; Download Text saves plain text.
+Copy and Download are each one button with a menu of formats, in the same order: Text, HTML, Markdown. Copy Text copies rich text for pasting into a visual editor; Download Text saves plain text.
 
 ### Copy rich text
 
-Copies rendered content for visual CMS editors.
+Copies the generated HTML as rich text for visual CMS editors. It carries no styles, so the CMS applies its own heading and list formatting (no `<strong>` or inline fonts).
 
 ### Copy Markdown
 

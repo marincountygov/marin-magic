@@ -125,6 +125,7 @@ def run(browser, base, tmp: Path):
         ("#download-md", "marinmagic-output.md", lambda t: t.startswith("## Ann\n\n- Email: a@example.org")),
     ):
         require(page.is_hidden("#download-panel"), "The Download menu starts closed")
+        require(page.locator("#download-panel button").all_text_contents() == ["Text", "HTML", "Markdown"], "The Download menu lists Text, HTML and Markdown")
         page.click("button[aria-controls=download-panel]")
         with page.expect_download() as info:
             page.click(button)
@@ -140,10 +141,15 @@ def run(browser, base, tmp: Path):
     require(page.is_hidden("#copy-panel"), "The Copy menu starts closed")
     page.click("button[aria-controls=copy-panel]")
     names = page.locator("#copy-panel button").all_text_contents()
-    require(names == ["HTML", "Text", "Markdown"], f"The Copy menu lists HTML, Text and Markdown, in the Download order: {names}")
+    require(names == ["Text", "HTML", "Markdown"], f"The Copy menu lists Text, HTML and Markdown, in the Download order: {names}")
     page.click("#copy-html")
     page.wait_for_function("document.querySelector('#file-status').textContent.includes('Copied HTML source')")
     require(page.is_hidden("#copy-panel"), "Choosing a format closes the Copy menu")
+    page.click("button[aria-controls=copy-panel]")
+    page.click("#copy-rich-text")
+    page.wait_for_function("document.querySelector('#file-status').textContent.includes('Copied rich text')")
+    rich = page.evaluate("""async () => { const [item] = await navigator.clipboard.read(); return await (await item.getType('text/html')).text(); }""")
+    require("style=" not in rich and "<strong" not in rich and rich.startswith("<h2>"), f"Rich text copy is plain HTML, with no styles or strong tags: {rich[:200]}")
     page.click("button[aria-controls=copy-panel]")
     page.click("#copy-md")
     page.wait_for_function("document.querySelector('#file-status').textContent.includes('Copied Markdown')")
