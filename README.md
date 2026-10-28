@@ -23,7 +23,7 @@ Marin Magic is a browser-based utility that:
 
 ## Odd characters
 
-A CSV or JSON file that is not UTF-8 (for example, saved from Excel) is read as Windows-1252, so a curly apostrophe stays an apostrophe instead of showing as a replacement character. Curly quotes become plain quotes, a replacement character between letters becomes an apostrophe, mis-decoded text such as `â€™` is repaired, and non-breaking spaces and invisible characters are normalized.
+The shell's `marinReadText` reads CSV and JSON files (UTF-8 first, then Windows-1252) and `marinCleanText` cleans every value; Magic does not carry its own copy of either. A CSV or JSON file that is not UTF-8 (for example, saved from Excel) is read as Windows-1252, so a curly apostrophe stays an apostrophe instead of showing as a replacement character. Curly quotes become plain quotes, a replacement character between letters becomes an apostrophe, mis-decoded text such as `â€™` is repaired, and non-breaking spaces and invisible characters are normalized.
 
 ## Structured output
 

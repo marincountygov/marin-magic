@@ -19,10 +19,6 @@
         margin-bottom: 1.5rem;
       }
 
-      .magic-upload {
-        border: 2px dashed var(--app-border);
-      }
-
       .magic-preview {
         min-height: 14rem;
         padding: 1rem;
@@ -81,30 +77,6 @@
         justify-content: flex-end;
       }
 
-      .magic-drop-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 997;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.55);
-        color: #ffffff;
-        pointer-events: none;
-      }
-
-      .magic-drop-overlay[data-active="true"] {
-        display: flex;
-      }
-
-      .magic-drop-overlay__inner {
-        padding: 1.5rem;
-        border: 2px dashed #ffffff;
-        border-radius: var(--pico-border-radius);
-        background: rgba(0, 0, 0, 0.7);
-        font-weight: 700;
-      }
-
       .magic-output h2,
       .magic-output h3,
       .magic-output h4,
@@ -150,9 +122,9 @@
         <div id="app-status-message" role="status" aria-live="polite"></div>
 
         <div class="magic-hero">
-          <article class="app-card magic-upload">
+          <article class="app-card upload-panel">
             <h2 id="home-heading">Upload</h2>
-            <p id="upload-help" class="app-help-text">Drag and drop a <code>.csv</code>/<code>.xlsx</code>/<code>.xls</code>/<code>.json</code> file anywhere on this page, or use the browse button.</p>
+            <p id="upload-help" class="app-help-text">Drag and drop a <code>.csv</code>/<code>.xlsx</code>/<code>.xls</code>/<code>.json</code> file anywhere on this page, or use the browse button. Your file stays in this browser.</p>
             <div class="app-actions">
               <button id="browse-files" type="button" class="action-button" data-icon="upload">Browse files</button>
             </div>
@@ -267,9 +239,6 @@
     <marin-app-footer app-name="Marin Magic"></marin-app-footer>
     <marin-app-feedback></marin-app-feedback>
 
-    <div id="drop-overlay" class="magic-drop-overlay" aria-hidden="true">
-      <div class="magic-drop-overlay__inner">Drop CSV, XLSX, XLS, or JSON file to upload</div>
-    </div>
 
     <script src="./vendor/xlsx.full.min.js"></script>
     <script src="vendor/marinos/marinos.js" defer></script>
@@ -290,7 +259,6 @@
       const resetToolButton = document.querySelector("#reset-tool");
       const copyRichTextButton = document.querySelector("#copy-rich-text");
       const copyHtmlButton = document.querySelector("#copy-html");
-      const dropOverlay = document.querySelector("#drop-overlay");
       const previewTabs = Array.from(document.querySelectorAll("#text-tab, #html-tab"));
 
       let headers = [];
@@ -348,36 +316,6 @@
             onActivate(tabs[nextIndex]);
           });
         });
-      }
-
-      // Files from Excel or older systems are often not UTF-8: a curly apostrophe saved as a single
-      // byte shows up as a replacement character (Jimmy\uFFFDs). Read a file as UTF-8 when it is
-      // valid UTF-8, and as Windows-1252 when it is not, so those bytes become the real character.
-      function decodeText(buffer) {
-        try {
-          return new TextDecoder("utf-8", { fatal: true }).decode(buffer).replace(/^\uFEFF/, "");
-        } catch (error) {
-          return new TextDecoder("windows-1252").decode(buffer);
-        }
-      }
-
-      // Plain characters only, so the output pastes into a CMS without errors: curly quotes become
-      // straight, spaces and invisible characters are normalized, text that was read as the wrong
-      // encoding (â€™) is repaired, and a replacement character between letters is an apostrophe.
-      const MOJIBAKE = [[/\u00e2\u20ac\u2122|\u00e2\u20ac\u02dc/g, "'"], [/\u00e2\u20ac\u0153|\u00e2\u20ac\u009d|\u00e2\u20ac\u00ef\u00bf\u00bd/g, '"']];
-      function cleanCharacters(value) {
-        if (typeof value !== "string") return value;
-        let text = value;
-        for (const [pattern, plain] of MOJIBAKE) text = text.replace(pattern, plain);
-        text = text
-          .replace(/(\p{L})\uFFFD(\p{L})/gu, "$1'$2")
-          .replace(/\uFFFD/g, "")
-          .replace(/[\u2018\u2019\u201A\u201B\u2032\u0060\u00B4]/g, "'")
-          .replace(/[\u201C\u201D\u201E\u2033]/g, '"')
-          .replace(/\u2026/g, "...")
-          .replace(/[\u00A0\u2007\u202F]/g, " ")
-          .replace(/[\u200B\u200C\u200D\u2060\uFEFF]/g, "");
-        return text;
       }
 
       function parseCsv(text) {
@@ -543,7 +481,7 @@
       }
 
       function loadTable(table) {
-        table = table.map((row) => (Array.isArray(row) ? row.map(cleanCharacters) : row));
+        table = table.map((row) => (Array.isArray(row) ? row.map(marinCleanText) : row));
         headers = table[0] || [];
         rows = table.slice(1).filter((row) => Array.isArray(row) && row.some((value) => clean(value)));
         if (!headers.length || !rows.length) {
@@ -559,51 +497,37 @@
         setFileStatus("");
       }
 
-      function handleSelectedFile(file) {
+      async function handleSelectedFile(file) {
         if (!file) return;
-        const reader = new FileReader();
         const type = detectFileType(file);
         if (type === "unknown") {
-          setFileStatus("Unsupported file type. Upload CSV, XLSX, XLS, or JSON.");
+          setFileStatus("Unsupported file type. Upload .csv, .xlsx, .xls, or .json.");
           return;
         }
         setFileStatus(`Reading ${type.toUpperCase()} file...`);
-        if (type === "xlsx") {
-          reader.onload = (event) => {
-            try {
-              const workbook = XLSX.read(event.target.result, { type: "array" });
-              const sheet = workbook.Sheets[workbook.SheetNames[0]];
-              loadTable(XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" }));
-            } catch (error) {
-              console.error(error);
-              setFileStatus("Could not read the spreadsheet file.");
-            }
-          };
-          reader.readAsArrayBuffer(file);
-          return;
-        }
-        reader.onload = (event) => {
-          try {
-            const text = decodeText(event.target.result);
-            loadTable(type === "json" ? parseJson(text) : parseCsv(text));
-          } catch (error) {
-            console.error(error);
-            setFileStatus(`Could not read the ${type.toUpperCase()} file.`);
+        try {
+          if (type === "xlsx") {
+            const workbook = XLSX.read(await file.arrayBuffer(), { type: "array" });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            loadTable(XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" }));
+            return;
           }
-        };
-        reader.readAsArrayBuffer(file);
+          const { text } = await marinReadText(file);
+          loadTable(type === "json" ? parseJson(text) : parseCsv(text));
+        } catch (error) {
+          console.error(error);
+          setFileStatus(type === "xlsx" ? "Could not read the spreadsheet file." : `Could not read the ${type.toUpperCase()} file.`);
+        }
       }
 
-      function hasDraggedFiles(event) {
-        return event.dataTransfer && event.dataTransfer.types && Array.from(event.dataTransfer.types).includes("Files");
-      }
-
-      function setDropOverlay(active) {
-        dropOverlay.dataset.active = active ? "true" : "false";
-      }
-
-      browseFilesButton.addEventListener("click", () => fileInput.click());
-      fileInput.addEventListener("change", (event) => handleSelectedFile(event.target.files && event.target.files[0]));
+      // The shell script is deferred, so its helpers exist once the page has been read.
+      document.addEventListener("DOMContentLoaded", () => marinUpload({
+        button: browseFilesButton,
+        input: fileInput,
+        accept: [".csv", ".xlsx", ".xls", ".json"],
+        onFile: handleSelectedFile,
+        onMessage: setFileStatus,
+      }));
       generatePreviewButton.addEventListener("click", () => {
         try {
           buildOutput();
@@ -613,55 +537,19 @@
           setFileStatus("Could not generate preview.");
         }
       });
-      // Put the plain generated HTML on the clipboard as rich text. Copying the rendered preview instead
-      // would carry this page's fonts, sizes and bold weights as inline styles, and a CMS turns a bold
-      // heading into <strong>. Text for a plain-text paste is the Text download.
-      copyRichTextButton.addEventListener("click", () => {
-        const onCopy = (event) => {
-          event.clipboardData.setData("text/html", output || "");
-          event.clipboardData.setData("text/plain", outputText || "");
-          event.preventDefault();
-        };
-        try {
-          document.addEventListener("copy", onCopy, { once: true });
-          const copied = document.execCommand("copy");
-          document.removeEventListener("copy", onCopy);
-          if (!copied) throw new Error("Copy failed.");
-          setFileStatus("Copied rich text for paste.");
-        } catch (error) {
-          document.removeEventListener("copy", onCopy);
-          console.error(error);
-          setFileStatus("Rich text copy failed.");
-        }
-      });
-      copyHtmlButton.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(output || "");
-          setFileStatus("Copied HTML source.");
-        } catch (error) {
-          console.error(error);
-          setFileStatus("HTML copy failed.");
-        }
-      });
-      document.querySelector("#copy-md").addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(outputMarkdown || "");
-          setFileStatus("Copied Markdown.");
-        } catch (error) {
-          console.error(error);
-          setFileStatus("Markdown copy failed.");
-        }
-      });
-      function downloadOutput(content, type, extension, label) {
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([content || ""], { type }));
-        link.download = `marinmagic-output.${extension}`;
-        link.click();
+      async function copyOutput(label, copy) {
+        setFileStatus((await copy()) ? `Copied ${label}.` : `Could not copy ${label}.`);
+      }
+      copyRichTextButton.addEventListener("click", () => copyOutput("rich text", () => marinCopyRich(outputText || "", output || "")));
+      copyHtmlButton.addEventListener("click", () => copyOutput("HTML", () => marinCopyText(output || "")));
+      document.querySelector("#copy-md").addEventListener("click", () => copyOutput("Markdown", () => marinCopyText(outputMarkdown || "")));
+      function downloadOutput(content, extension, label) {
+        marinDownload({ content: content || "", name: `marinmagic-output.${extension}` });
         setFileStatus(`${label} file downloaded.`);
       }
-      downloadHtmlButton.addEventListener("click", () => downloadOutput(output, "text/html", "html", "HTML"));
-      document.querySelector("#download-text").addEventListener("click", () => downloadOutput(outputText, "text/plain", "txt", "Text"));
-      document.querySelector("#download-md").addEventListener("click", () => downloadOutput(outputMarkdown, "text/markdown", "md", "Markdown"));
+      downloadHtmlButton.addEventListener("click", () => downloadOutput(output, "html", "HTML"));
+      document.querySelector("#download-text").addEventListener("click", () => downloadOutput(outputText, "txt", "Text"));
+      document.querySelector("#download-md").addEventListener("click", () => downloadOutput(outputMarkdown, "md", "Markdown"));
       resetToolButton.addEventListener("click", () => {
         fileInput.value = "";
         headers = [];
@@ -674,29 +562,6 @@
         textPanel.innerHTML = '<p class="app-help-text">Preview will appear after a file is loaded.</p>';
         htmlPanel.textContent = "";
         setFileStatus("");
-      });
-      window.addEventListener("dragenter", (event) => {
-        if (!hasDraggedFiles(event)) return;
-        event.preventDefault();
-        setDropOverlay(true);
-      });
-      window.addEventListener("dragover", (event) => {
-        if (!hasDraggedFiles(event)) return;
-        event.preventDefault();
-        setDropOverlay(true);
-      });
-      window.addEventListener("dragleave", (event) => {
-        if (!hasDraggedFiles(event)) return;
-        if (event.clientX <= 0 || event.clientY <= 0 || event.clientX >= window.innerWidth || event.clientY >= window.innerHeight) setDropOverlay(false);
-      });
-      window.addEventListener("drop", (event) => {
-        if (!hasDraggedFiles(event)) return;
-        event.preventDefault();
-        setDropOverlay(false);
-        const files = event.dataTransfer && event.dataTransfer.files;
-        if (!files || !files.length) return;
-        if (files.length > 1) setFileStatus(`Multiple files detected; using first file: ${files[0].name}`);
-        handleSelectedFile(files[0]);
       });
       setupTabs(previewTabs, () => undefined);
     </script>
