@@ -196,7 +196,7 @@ The HTML source copy button:
 
 ### Download
 
-Download is one button with a menu of formats: HTML, Text and Markdown. Choosing a format:
+Download is one button with a menu of formats: Text, HTML and Markdown. Choosing a format:
 
 1. Creates a Blob of that format from the current output: `text/html`, `text/plain` or `text/markdown`.
 2. Downloads it as `marinmagic-output.html`, `marinmagic-output.txt` or `marinmagic-output.md`.
@@ -328,7 +328,7 @@ If GitHub commit loading fails:
 
 * Given generated output, when the rich text copy button is selected, then the rendered HTML is copied for CMS paste.
 * Given generated output, when the HTML copy button is selected, then raw HTML source is copied.
-* Given generated output, when HTML, Text or Markdown is chosen from the Download menu, then a `marinmagic-output` file of that type is downloaded.
+* Given generated output, when Text, HTML or Markdown is chosen from the Download menu, then a `marinmagic-output` file of that type is downloaded.
 
 ### Reset
 
