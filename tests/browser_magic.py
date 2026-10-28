@@ -55,11 +55,13 @@ def bo(html: str) -> str:
 
 def open_file(page, path: str):
     page.set_input_files("#file-input", path)
-    page.wait_for_function("document.querySelector('#file-status').textContent.includes('Preview generated')")
+    page.wait_for_function("!/Reading/.test(document.querySelector('#file-status').textContent) && !document.querySelector('#mapping-panel').hidden && document.querySelector('#html-panel').textContent.length > 0")
+    page.wait_for_timeout(100)
 
 
 def run(browser, base, tmp: Path):
     context = browser.new_context(viewport={"width": 1100, "height": 900}, accept_downloads=True)
+    context.grant_permissions(["clipboard-read", "clipboard-write"], origin=base.rstrip("/"))
     page = context.new_page()
     problems = []
     page.on("pageerror", lambda e: problems.append(str(e)))
@@ -117,17 +119,53 @@ def run(browser, base, tmp: Path):
     require(bo(output(page)).index("Email:") < bo(output(page)).index("Notes:"), "Move up puts it back")
 
     # Download and reset.
-    with page.expect_download() as info:
-        page.click("#download-html")
-    saved = Path(info.value.path()).read_text(encoding="utf-8")
-    require("<h2>Ann</h2>" in saved and "<script" not in saved, "The downloaded file is the generated HTML")
+    for button, name, check in (
+        ("#download-html", "marinmagic-output.html", lambda t: "<h2>Ann</h2>" in t and "<script" not in t),
+        ("#download-text", "marinmagic-output.txt", lambda t: t.startswith("Ann\nEmail: a@example.org") and "<" not in t.split("Cy")[0]),
+        ("#download-md", "marinmagic-output.md", lambda t: t.startswith("## Ann\n\n- Email: a@example.org")),
+    ):
+        require(page.is_hidden("#download-panel"), "The Download menu starts closed")
+        page.click("button[aria-controls=download-panel]")
+        with page.expect_download() as info:
+            page.click(button)
+        require(info.value.suggested_filename == name, f"The download is named {name}: {info.value.suggested_filename}")
+        saved = Path(info.value.path()).read_text(encoding="utf-8")
+        require(check(saved), f"{name} has the generated content: {saved!r}")
     page.click("#reset-tool")
     page.wait_for_timeout(200)
     require(page.is_hidden("#mapping-panel") or "Ann" not in output(page), "Reset clears the result")
 
+    open_file(page, write(tmp, "people.csv", CSV))
+    # Copy is one button with a menu of formats; choosing one runs it and closes the menu.
+    require(page.is_hidden("#copy-panel"), "The Copy menu starts closed")
+    page.click("button[aria-controls=copy-panel]")
+    names = page.locator("#copy-panel button").all_text_contents()
+    require(names == ["HTML", "Text", "Markdown"], f"The Copy menu lists HTML, Text and Markdown, in the Download order: {names}")
+    page.click("#copy-html")
+    page.wait_for_function("document.querySelector('#file-status').textContent.includes('Copied HTML source')")
+    require(page.is_hidden("#copy-panel"), "Choosing a format closes the Copy menu")
+    page.click("button[aria-controls=copy-panel]")
+    page.click("#copy-md")
+    page.wait_for_function("document.querySelector('#file-status').textContent.includes('Copied Markdown')")
+    require(page.evaluate("navigator.clipboard.readText()").startswith("## "), "Copy Markdown puts Markdown on the clipboard")
+
     # JSON input.
     open_file(page, write(tmp, "people.json", json.dumps([{"Name": "Dee", "Email": "d@example.org"}, {"Name": "Al", "Email": "al@example.org"}])))
     require(output(page).startswith("<h2>Al</h2>"), "JSON input works and is sorted")
+
+    # Bad characters are fixed, not shown as errors: a Windows-1252 file (a curly apostrophe saved as one
+    # byte), a UTF-8 file that already holds a replacement character, curly quotes, and a wrongly decoded apostrophe.
+    legacy = tmp / "legacy.csv"
+    legacy.write_bytes(b"Name,Note\nJimmy\x92s,Caf\xe9 \x93open\x94\n")
+    open_file(page, str(legacy))
+    html = output(page)
+    require("<h2>Jimmy's</h2>" in html, f"A Windows-1252 apostrophe becomes a plain apostrophe: {html}")
+    require("Caf\u00e9" in html and "&quot;open&quot;" in html, f"Accents are kept and curly quotes become plain: {html}")
+    require(page.text_content("#file-status").strip() == "", "No message is shown about fixed characters")
+    open_file(page, write(tmp, "broken.csv", "Name,Note\nJimmy\ufffds,It\u2019s \u00e2\u20ac\u2122fine\u2026\n"))
+    html = output(page)
+    require("<h2>Jimmy's</h2>" in html and "It's 'fine..." in html, f"A replacement character, curly apostrophes and mis-decoded text are fixed: {html}")
+    require("\ufffd" not in html, "No replacement characters are left")
 
     # Unsupported file types are refused with a message.
     page.set_input_files("#file-input", write(tmp, "notes.txt", "hello"))

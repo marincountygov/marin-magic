@@ -74,7 +74,7 @@ On page load:
 * Text preview tab is visible.
 * File type defaults to CSV.
 * Upload input accepts CSV files.
-* Status reads: `Select a file to begin.`
+* Status is empty until a file is chosen.
 * Mapping panel is hidden.
 * Preview and HTML source panes are empty.
 
@@ -89,7 +89,7 @@ When the user changes file type:
 * Mapping panel is hidden.
 * Internal state is reset.
 * Preview mode returns to Text.
-* Status returns to `Select a file to begin.`
+* Status is cleared.
 
 ### 6.3 File upload and parse
 
@@ -97,12 +97,13 @@ When a user selects a file:
 
 1. The selected file type controls the parsing method.
 2. Status updates to indicate the file is being read.
-3. The file is parsed client-side.
-4. Parsed data is loaded into the shared table model.
-5. The first row becomes headers.
-6. Non-empty remaining rows become data rows.
-7. If data is usable, mapping controls render and preview is generated automatically.
-8. If data is not usable, mapping and preview remain hidden/empty and status reports no usable data.
+3. The file is parsed client-side. A CSV or JSON file is read as UTF-8 when it is valid UTF-8 and as Windows-1252 when it is not.
+4. Every text value is cleaned: curly quotes become plain quotes, a replacement character between letters becomes an apostrophe (any other is removed), mis-decoded text such as `â€™` is repaired, and non-breaking spaces and invisible characters are normalized.
+5. Parsed data is loaded into the shared table model.
+6. The first row becomes headers.
+7. Non-empty remaining rows become data rows.
+8. If data is usable, mapping controls render and preview is generated automatically.
+9. If data is not usable, mapping and preview remain hidden/empty and status reports no usable data.
 
 ### 6.4 Field mapping
 
@@ -125,7 +126,7 @@ Operational behavior:
 * Dropping before or after a target reorders the checkbox row.
 * The generated list item order follows the current DOM order of checked checkbox rows.
 
-### 6.6 Generate preview
+### 6.6 Get preview
 
 When preview is generated:
 
@@ -140,7 +141,7 @@ When preview is generated:
 9. Generated HTML is stored as `output`.
 10. Rendered preview receives `output` as HTML.
 11. HTML preview receives `output` as escaped text.
-12. Status updates to `Preview generated.`
+12. Status is cleared.
 
 ## 7. Output rules
 
@@ -193,14 +194,16 @@ The HTML source copy button:
 2. Updates status to `Copied HTML source.` on success.
 3. Updates status to `Copy failed.` on failure.
 
-### Download HTML
+### Download
 
-The download button:
+Download is one button with a menu of formats: HTML, Text and Markdown. Choosing a format:
 
-1. Creates a text/html Blob from the current output.
-2. Creates a temporary object URL.
-3. Downloads the file as `index.html`.
-4. Updates status to `HTML file downloaded.`
+1. Creates a Blob of that format from the current output: `text/html`, `text/plain` or `text/markdown`.
+2. Downloads it as `marinmagic-output.html`, `marinmagic-output.txt` or `marinmagic-output.md`.
+3. Updates status to `HTML file downloaded.`, `Text file downloaded.` or `Markdown file downloaded.`
+4. Closes the menu.
+
+Text has the heading, then one `Label: value` line per field, with a blank line between records. Markdown uses the chosen heading level (`##` for h2) and a `- Label: value` list.
 
 ## 10. Navigation tabs
 
@@ -325,7 +328,7 @@ If GitHub commit loading fails:
 
 * Given generated output, when the rich text copy button is selected, then the rendered HTML is copied for CMS paste.
 * Given generated output, when the HTML copy button is selected, then raw HTML source is copied.
-* Given generated output, when Download HTML is selected, then an `index.html` file is downloaded.
+* Given generated output, when HTML, Text or Markdown is chosen from the Download menu, then a `marinmagic-output` file of that type is downloaded.
 
 ### Reset
 
