@@ -21,6 +21,10 @@ Marin Magic is a browser-based utility that:
 * `.xlsx`
 * `.json`
 
+## Odd characters
+
+A CSV or JSON file that is not UTF-8 (for example, saved from Excel) is read as Windows-1252, so a curly apostrophe stays an apostrophe instead of showing as a replacement character. Curly quotes become plain quotes, a replacement character between letters becomes an apostrophe, mis-decoded text such as `â€™` is repaired, and non-breaking spaces and invisible characters are normalized.
+
 ## Structured output
 
 Generate:
@@ -39,11 +43,17 @@ Rendered rich text preview for CMS copy/paste.
 
 Raw HTML output for source/code editing.
 
-## Copy tools
+## Copy and download
+
+Copy and Download are each one button with a menu of formats, in the same order: HTML, Text, Markdown. Copy Text copies rich text for pasting into a visual editor; Download Text saves plain text.
 
 ### Copy rich text
 
 Copies rendered content for visual CMS editors.
+
+### Copy Markdown
+
+Copies the output as Markdown: a heading at the chosen level and a `- Label: value` list for each record.
 
 ### Copy HTML source
 
@@ -144,11 +154,11 @@ Choose which columns appear as list items.
 
 Drag/drop rows to change output order.
 
-## 4. Generate preview
+## 4. Get preview
 
 Click:
 
-`Generate preview`
+`Get preview`
 
 ## 5. Copy output
 

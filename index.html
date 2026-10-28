@@ -7,6 +7,10 @@
     <meta name="description" content="Convert spreadsheet data into CMS-ready structured rich text.">
     <link rel="stylesheet" href="vendor/marinos/marinos.css">
     <style>
+      .magic-actions {
+        margin-bottom: 1.5rem;
+      }
+
       .magic-hero {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
@@ -147,13 +151,13 @@
 
         <div class="magic-hero">
           <article class="app-card magic-upload">
-            <h2 id="home-heading">Upload a spreadsheet or data file</h2>
-            <p id="upload-help" class="app-help-text">Drag and drop a file anywhere on this page, or use the browse button. Supported file types: <code>.csv</code>, <code>.xlsx</code>, <code>.xls</code>, <code>.json</code>.</p>
+            <h2 id="home-heading">Upload</h2>
+            <p id="upload-help" class="app-help-text">Drag and drop a <code>.csv</code>/<code>.xlsx</code>/<code>.xls</code>/<code>.json</code> file anywhere on this page, or use the browse button.</p>
             <div class="app-actions">
               <button id="browse-files" type="button" class="action-button" data-icon="upload">Browse files</button>
             </div>
             <input id="file-input" class="visually-hidden" type="file" aria-labelledby="home-heading" aria-describedby="upload-help" accept=".csv,.xlsx,.xls,.json,application/json,text/csv">
-            <p id="file-status" class="app-help-text" role="status" aria-live="polite" aria-atomic="true">Select a file to begin.</p>
+            <p id="file-status" class="app-help-text" role="status" aria-live="polite" aria-atomic="true"></p>
           </article>
         </div>
 
@@ -161,7 +165,7 @@
           <article id="mapping-panel" class="app-card" hidden>
             <div class="app-toolbar">
               <div>
-                <h2>Choose output fields</h2>
+                <h2>Design</h2>
               </div>
             </div>
             <div class="app-form-grid">
@@ -180,31 +184,32 @@
                 </select>
               </div>
             </div>
-            <fieldset aria-describedby="field-list-help">
-              <legend>Select columns for list items</legend>
-              <p id="field-list-help" class="app-help-text">Drag fields to reorder them, or use Move up and Move down buttons as a keyboard-accessible alternative.</p>
+            <fieldset>
+              <legend>List items</legend>
               <div id="field-list" class="magic-field-list"></div>
             </fieldset>
           </article>
 
-          <div class="app-toolbar">
-            <div class="app-actions">
-              <button id="generate-preview" type="button" class="primary">Generate preview</button>
-              <div class="action-group" role="group" aria-label="Output actions">
-                <button id="download-html" class="action-button" type="button" data-icon="download" aria-label="Download HTML" title="Download HTML"></button>
-                <button id="reset-tool" class="action-button" type="button" data-icon="rotate-ccw" aria-label="Reset" title="Reset"></button>
-              </div>
-            </div>
-          </div>
-
           <article class="app-card">
-            <div class="app-toolbar">
-              <div>
-                <h2>Generated content</h2>
+            <h2>Preview</h2>
+            <div class="app-actions magic-actions">
+              <button id="generate-preview" type="button" class="action-button" data-icon="refresh-cw">Get preview</button>
+              <button id="reset-tool" class="action-button" type="button" data-icon="rotate-ccw" aria-label="Reset" title="Reset"></button>
+              <div class="menu">
+                <button type="button" class="action-button menu-toggle" data-icon="copy" aria-expanded="false" aria-controls="copy-panel" aria-label="Copy, choose a format" title="Copy">Copy<svg class="menu-toggle__caret" aria-hidden="true" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg></button>
+                <div id="copy-panel" class="menu-panel" hidden>
+                  <button id="copy-html" type="button" data-button-kind="menu-item" aria-label="Copy HTML source">HTML</button>
+                  <button id="copy-rich-text" type="button" data-button-kind="menu-item" aria-label="Copy rich text">Text</button>
+                  <button id="copy-md" type="button" data-button-kind="menu-item" aria-label="Copy Markdown">Markdown</button>
+                </div>
               </div>
-              <div class="app-actions">
-                <button id="copy-rich-text" class="action-button" type="button" data-icon="copy" aria-label="Copy rich text" title="Copy rich text">Copy text</button>
-                <button id="copy-html" class="action-button" type="button" data-icon="copy" aria-label="Copy HTML source" title="Copy HTML source">Copy HTML</button>
+              <div class="menu">
+                <button type="button" class="action-button menu-toggle" data-icon="download" aria-expanded="false" aria-controls="download-panel" aria-label="Download, choose a format" title="Download">Download<svg class="menu-toggle__caret" aria-hidden="true" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg></button>
+                <div id="download-panel" class="menu-panel" hidden>
+                  <button id="download-html" type="button" data-button-kind="menu-item" aria-label="Download HTML">HTML</button>
+                  <button id="download-text" type="button" data-button-kind="menu-item" aria-label="Download text">Text</button>
+                  <button id="download-md" type="button" data-button-kind="menu-item" aria-label="Download Markdown">Markdown</button>
+                </div>
               </div>
             </div>
 
@@ -291,6 +296,8 @@
       let headers = [];
       let rows = [];
       let output = "";
+      let outputText = "";
+      let outputMarkdown = "";
 
       function announce(message) {
         if (statusMessage) statusMessage.textContent = message;
@@ -341,6 +348,36 @@
             onActivate(tabs[nextIndex]);
           });
         });
+      }
+
+      // Files from Excel or older systems are often not UTF-8: a curly apostrophe saved as a single
+      // byte shows up as a replacement character (Jimmy\uFFFDs). Read a file as UTF-8 when it is
+      // valid UTF-8, and as Windows-1252 when it is not, so those bytes become the real character.
+      function decodeText(buffer) {
+        try {
+          return new TextDecoder("utf-8", { fatal: true }).decode(buffer).replace(/^\uFEFF/, "");
+        } catch (error) {
+          return new TextDecoder("windows-1252").decode(buffer);
+        }
+      }
+
+      // Plain characters only, so the output pastes into a CMS without errors: curly quotes become
+      // straight, spaces and invisible characters are normalized, text that was read as the wrong
+      // encoding (â€™) is repaired, and a replacement character between letters is an apostrophe.
+      const MOJIBAKE = [[/\u00e2\u20ac\u2122|\u00e2\u20ac\u02dc/g, "'"], [/\u00e2\u20ac\u0153|\u00e2\u20ac\u009d|\u00e2\u20ac\u00ef\u00bf\u00bd/g, '"']];
+      function cleanCharacters(value) {
+        if (typeof value !== "string") return value;
+        let text = value;
+        for (const [pattern, plain] of MOJIBAKE) text = text.replace(pattern, plain);
+        text = text
+          .replace(/(\p{L})\uFFFD(\p{L})/gu, "$1'$2")
+          .replace(/\uFFFD/g, "")
+          .replace(/[\u2018\u2019\u201A\u201B\u2032\u0060\u00B4]/g, "'")
+          .replace(/[\u201C\u201D\u201E\u2033]/g, '"')
+          .replace(/\u2026/g, "...")
+          .replace(/[\u00A0\u2007\u202F]/g, " ")
+          .replace(/[\u200B\u200C\u200D\u2060\uFEFF]/g, "");
+        return text;
       }
 
       function parseCsv(text) {
@@ -491,6 +528,10 @@
           .map((row) => ({ heading: clean(row[headingIndex]), row }))
           .filter((record) => record.heading)
           .sort((a, b) => a.heading.localeCompare(b.heading, undefined, { sensitivity: "base" }));
+        const hashes = "#".repeat(Number(tag.slice(1)) || 2);
+        const fields = (record) => selectedColumns.filter((index) => clean(record.row[index]));
+        outputText = records.map((record) => [record.heading, ...fields(record).map((index) => `${headers[index]}: ${record.row[index]}`)].join("\n")).join("\n\n");
+        outputMarkdown = records.map((record) => [`${hashes} ${record.heading}`, "", ...fields(record).map((index) => `- ${headers[index]}: ${record.row[index]}`)].join("\n")).join("\n\n");
         output = records.map((record) => {
           const listItems = selectedColumns
             .map((index) => clean(record.row[index]) ? `<li>${esc(headers[index])}: ${esc(record.row[index])}</li>` : "")
@@ -502,6 +543,7 @@
       }
 
       function loadTable(table) {
+        table = table.map((row) => (Array.isArray(row) ? row.map(cleanCharacters) : row));
         headers = table[0] || [];
         rows = table.slice(1).filter((row) => Array.isArray(row) && row.some((value) => clean(value)));
         if (!headers.length || !rows.length) {
@@ -514,7 +556,7 @@
         mappingPanel.hidden = false;
         renderMapping();
         buildOutput();
-        setFileStatus("Preview generated.");
+        setFileStatus("");
       }
 
       function handleSelectedFile(file) {
@@ -542,14 +584,14 @@
         }
         reader.onload = (event) => {
           try {
-            const text = String(event.target.result || "");
+            const text = decodeText(event.target.result);
             loadTable(type === "json" ? parseJson(text) : parseCsv(text));
           } catch (error) {
             console.error(error);
             setFileStatus(`Could not read the ${type.toUpperCase()} file.`);
           }
         };
-        reader.readAsText(file);
+        reader.readAsArrayBuffer(file);
       }
 
       function hasDraggedFiles(event) {
@@ -565,7 +607,7 @@
       generatePreviewButton.addEventListener("click", () => {
         try {
           buildOutput();
-          setFileStatus("Preview generated.");
+          setFileStatus("");
         } catch (error) {
           console.error(error);
           setFileStatus("Could not generate preview.");
@@ -603,23 +645,37 @@
           setFileStatus("HTML copy failed.");
         }
       });
-      downloadHtmlButton.addEventListener("click", () => {
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([output || ""], { type: "text/html" }));
-        link.download = "marinmagic-output.html";
-        link.click();
-        setFileStatus("HTML file downloaded.");
+      document.querySelector("#copy-md").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(outputMarkdown || "");
+          setFileStatus("Copied Markdown.");
+        } catch (error) {
+          console.error(error);
+          setFileStatus("Markdown copy failed.");
+        }
       });
+      function downloadOutput(content, type, extension, label) {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(new Blob([content || ""], { type }));
+        link.download = `marinmagic-output.${extension}`;
+        link.click();
+        setFileStatus(`${label} file downloaded.`);
+      }
+      downloadHtmlButton.addEventListener("click", () => downloadOutput(output, "text/html", "html", "HTML"));
+      document.querySelector("#download-text").addEventListener("click", () => downloadOutput(outputText, "text/plain", "txt", "Text"));
+      document.querySelector("#download-md").addEventListener("click", () => downloadOutput(outputMarkdown, "text/markdown", "md", "Markdown"));
       resetToolButton.addEventListener("click", () => {
         fileInput.value = "";
         headers = [];
         rows = [];
         output = "";
+        outputText = "";
+        outputMarkdown = "";
         mappingPanel.hidden = true;
         fieldList.innerHTML = "";
         textPanel.innerHTML = '<p class="app-help-text">Preview will appear after a file is loaded.</p>';
         htmlPanel.textContent = "";
-        setFileStatus("Select a file to begin.");
+        setFileStatus("");
       });
       window.addEventListener("dragenter", (event) => {
         if (!hasDraggedFiles(event)) return;
