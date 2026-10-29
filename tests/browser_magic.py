@@ -137,6 +137,11 @@ def run(browser, base, tmp: Path):
     require(page.is_hidden("#mapping-panel") or "Ann" not in output(page), "Reset clears the result")
 
     open_file(page, write(tmp, "people.csv", CSV))
+    # The action buttons: the one main action with its words, then icon-only Copy and Download, then Reset, each named.
+    order = page.evaluate("""() => [...document.querySelectorAll('.magic-actions > button, .magic-actions > .menu > button')].map((b) => [b.id || b.getAttribute('aria-controls'), b.getAttribute('aria-label') || b.textContent.trim(), b.textContent.trim(), b.hasAttribute('title')])""")
+    require([o[0] for o in order] == ["generate-preview", "copy-panel", "download-panel", "reset-tool"], f"Action order: {order}")
+    require(order[0][2] == "Get preview" and all(o[2] == "" and o[3] for o in order[1:]), f"Copy, Download and Reset are icon-only with a title: {order}")
+    require([o[1] for o in order[1:]] == ["Copy, choose a format", "Download, choose a format", "Reset"], f"Action names: {order}")
     # Copy is one button with a menu of formats; choosing one runs it and closes the menu.
     require(page.is_hidden("#copy-panel"), "The Copy menu starts closed")
     page.click("button[aria-controls=copy-panel]")
