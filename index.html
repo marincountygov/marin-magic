@@ -283,6 +283,13 @@
           .replace(/"/g, "&quot;");
       }
 
+      function showPreviewMessage(message) {
+        const note = document.createElement("p");
+        note.className = "app-help-text";
+        note.textContent = message;
+        textPanel.replaceChildren(note);
+      }
+
       function setFileStatus(message) {
         fileStatus.textContent = message;
       }
@@ -458,7 +465,7 @@
       function buildOutput() {
         const headingIndex = Number(headingColumn.value);
         if (Number.isNaN(headingIndex)) throw new Error("No heading selected.");
-        const tag = headingLevel.value || "h2";
+        const tag = /^h[1-6]$/.test(headingLevel.value) ? headingLevel.value : "h2";
         const selectedColumns = Array.from(fieldList.querySelectorAll("input:checked"))
           .map((input) => Number(input.value))
           .filter((index) => index !== headingIndex);
@@ -476,7 +483,20 @@
             .join("");
           return `<${tag}>${esc(record.heading)}</${tag}><ul>${listItems}</ul>`;
         }).join("");
-        textPanel.innerHTML = output || '<p class="app-help-text">No output generated.</p>';
+        // The preview is built from elements, so a value from the file is only ever text. `output` is the HTML to copy.
+        const preview = records.flatMap((record) => {
+          const heading = document.createElement(tag);
+          heading.textContent = record.heading;
+          const list = document.createElement("ul");
+          selectedColumns.filter((index) => clean(record.row[index])).forEach((index) => {
+            const item = document.createElement("li");
+            item.textContent = `${clean(headers[index])}: ${clean(record.row[index])}`;
+            list.append(item);
+          });
+          return [heading, list];
+        });
+        if (preview.length) textPanel.replaceChildren(...preview);
+        else showPreviewMessage("No output generated.");
         htmlPanel.textContent = output;
       }
 
@@ -486,7 +506,7 @@
         rows = table.slice(1).filter((row) => Array.isArray(row) && row.some((value) => clean(value)));
         if (!headers.length || !rows.length) {
           mappingPanel.hidden = true;
-          textPanel.innerHTML = '<p class="app-help-text">No usable data found.</p>';
+          showPreviewMessage("No usable data found.");
           htmlPanel.textContent = "";
           setFileStatus("No usable data found.");
           return;
@@ -559,7 +579,7 @@
         outputMarkdown = "";
         mappingPanel.hidden = true;
         fieldList.innerHTML = "";
-        textPanel.innerHTML = '<p class="app-help-text">Preview will appear after a file is loaded.</p>';
+        showPreviewMessage("Preview will appear after a file is loaded.");
         htmlPanel.textContent = "";
         setFileStatus("");
       });
