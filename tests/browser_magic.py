@@ -86,6 +86,7 @@ def run(browser, base, tmp: Path):
     require("&lt;b&gt;bold&lt;/b&gt; &amp; \"quoted\" note" in first or "&lt;b&gt;bold&lt;/b&gt; &amp; &quot;quoted&quot; note" in first,
             "Markup in the data is escaped")
     require(page.locator("#text-panel b").count() == 0, "No bold element is created from the data")
+    require('<b>bold</b> & "quoted" note' in page.locator("#text-panel").inner_text(), "The preview shows the markup in the data as plain text")
 
     # The Text tab shows the result; the HTML tab shows the source.
     require(page.locator("#text-panel h2").first.inner_text() == "Ann", "The Text tab renders the headings")
